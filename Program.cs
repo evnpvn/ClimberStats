@@ -25,7 +25,23 @@ namespace ClimberStats
             {
                 return reader.ReadToEnd();
             }
-            
         }
+
+        public List<string> ParseHTML(string rawClimberHtml)
+        {
+            //iterate over the string
+            //find and return the elements in a list
+
+            //Find a .NET method that can be called against a string to break it up into sections
+            //String split could work. If we could split the string right before the element we want.
+            //Then we would have a list like this
+                //object 0 - string of text before the first element I want
+                //object 1 - string of text for the first element I want
+                //etc.
+                //Trim could work as well before I call split.
+            
+
+        }
+
     }
 }
