@@ -23,7 +23,17 @@ namespace ClimberStats
         public double Weight {get; set; }
         public double Bmi 
         { 
-          get { return Bmi =  Weight/((Math.Pow(Height/100,2))); }
+          get 
+          { 
+            if(Height == 0)
+            {
+              return Bmi = 0;
+            }
+            else
+            {
+              return Bmi =  Weight/((Math.Pow(Height/100,2))); 
+            }
+          }
           private set { } 
         }           
         

@@ -27,18 +27,18 @@ namespace ClimberStats
 
             foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//h1[@class='name']"))
             {
+                //it could be assigned null or a string value
                 climber.FullName = node.InnerHtml.Trim();
             }
             foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//dt[@class='nation']"))
             {
+                //it could be assigned null or a string value
                 climber.Nationality = node.InnerHtml;
             }
             foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//dt[@class='height']"))
             {
                 //TODO - add error handling for this.
-                //also need error handling for divide by zero
-                //and null values
-                    //If it returns false then don't assign the value back to climber.Height
+                              
                 double parsedHeight = 0;
                 if (double.TryParse(node.InnerHtml, out parsedHeight))
                 { climber.Height = parsedHeight; }
@@ -58,9 +58,9 @@ namespace ClimberStats
                 { climber.BirthYear = parsedBday; }
                 else { climber.BirthYear = 0; }
             }
-            Console.WriteLine(climber.FirstName);
-            Console.WriteLine(climber.LastName);
-            Console.WriteLine(climber.Bmi);
+            // Console.WriteLine(climber.FirstName);
+            // Console.WriteLine(climber.LastName);
+            // Console.WriteLine(climber.Bmi);
             allClimbers.Add(climber);
         }    
     }
