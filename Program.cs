@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using System.Net;
+using HtmlAgilityPack;
 
 namespace ClimberStats
 {
@@ -12,36 +12,56 @@ namespace ClimberStats
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine(GetMaddieClimber());
+            CreateClimberList();
         }
-
-        public static string GetMaddieClimber()
+        
+        public static void CreateClimberList()
         {
-            WebClient webClient = new WebClient();
-            byte [] maddieIfscPagedwnload = webClient.DownloadData("https://www.ifsc-climbing.org/index.php?option=com_ifsc&view=athlete&id=60694");
+            List<Climber> allClimbers = new List<Climber>();
 
-            using (MemoryStream stream = new MemoryStream(maddieIfscPagedwnload))
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                return reader.ReadToEnd();
-            }
-        }
-
-        public List<string> ParseHTML(string rawClimberHtml)
-        {
-            //iterate over the string
-            //find and return the elements in a list
-
-            //Find a .NET method that can be called against a string to break it up into sections
-            //String split could work. If we could split the string right before the element we want.
-            //Then we would have a list like this
-                //object 0 - string of text before the first element I want
-                //object 1 - string of text for the first element I want
-                //etc.
-                //Trim could work as well before I call split.
+            string url = "https://www.ifsc-climbing.org/index.php?option=com_ifsc&view=athlete&id=60694";
+            HtmlWeb Webget = new HtmlWeb();
+            HtmlDocument doc = Webget.Load(url);
             
+            Climber climber = new Climber();
 
-        }
-
+            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//h1[@class='name']"))
+            {
+                climber.FullName = node.InnerHtml.Trim();
+            }
+            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//dt[@class='nation']"))
+            {
+                climber.Nationality = node.InnerHtml;
+            }
+            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//dt[@class='height']"))
+            {
+                //TODO - add error handling for this.
+                //also need error handling for divide by zero
+                //and null values
+                    //If it returns false then don't assign the value back to climber.Height
+                double parsedHeight = 0;
+                if (double.TryParse(node.InnerHtml, out parsedHeight))
+                { climber.Height = parsedHeight; }
+                else { climber.Height = 0; }               
+            }
+            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//dt[@class='weight']"))
+            {
+                double parsedWeight = 0;
+                if (double.TryParse(node.InnerHtml, out parsedWeight))
+                { climber.Weight = parsedWeight; }
+                else { climber.Weight = 0; } 
+            }
+            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//dt[@class='birthdate']"))
+            {
+                int parsedBday = 0;
+                if (int.TryParse(node.InnerHtml, out parsedBday))
+                { climber.BirthYear = parsedBday; }
+                else { climber.BirthYear = 0; }
+            }
+            Console.WriteLine(climber.FirstName);
+            Console.WriteLine(climber.LastName);
+            Console.WriteLine(climber.Bmi);
+            allClimbers.Add(climber);
+        }    
     }
 }
