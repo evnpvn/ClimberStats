@@ -36,18 +36,6 @@ namespace ClimberStats
           }
           private set { } 
         }           
-        
         public int BirthYear { get; set; }
-        public int Age { get; set; }
-        
-        //I don't need a constructor. I want to create the object and then update it's properties 1 at a time.
-        // public Climber(string fullName, string nation, double height, double weight, int birthdate)
-        // {
-        //     FullName = fullName;
-        //     Nationality = nation;
-        //     Height = height;
-        //     Weight = weight;
-        //     BirthDate = birthdate;
-        // }
     }
 }

@@ -21,47 +21,67 @@ namespace ClimberStats
 
             string url = "https://www.ifsc-climbing.org/index.php?option=com_ifsc&view=athlete&id=60694";
             HtmlWeb Webget = new HtmlWeb();
+            
+            //HtmlDocument doc = Webget.Load(url);
+
             HtmlDocument doc = Webget.Load(url);
             
-            Climber climber = new Climber();
+            if(doc != null)
+            {
+                //There's an issue with climber objects being created that will have null values
+                //I guess it's no big deal if the climber isn't added to the list at the end.
+                Climber climber = new Climber();
 
-            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//h1[@class='name']"))
-            {
-                //it could be assigned null or a string value
-                climber.FullName = node.InnerHtml.Trim();
+                try // find nodes
+                {
+                    HtmlNode nodeName = doc.DocumentNode.SelectSingleNode("//h1[@class='name']");
+                    if(nodeName != null)
+                    {
+                        climber.FullName = nodeName.InnerHtml.Trim();
+                    }
+                    HtmlNode nodeNation = doc.DocumentNode.SelectSingleNode("//dt[@class='nation']");
+                    if(nodeNation != null)
+                    {
+                        climber.Nationality = nodeNation.InnerHtml;
+                    }
+                    HtmlNode nodeHeight = doc.DocumentNode.SelectSingleNode("//dt[@class='height']");
+                    if(nodeHeight != null)
+                    {
+                        double parsedHeight = 0;
+                        if (double.TryParse(nodeHeight.InnerHtml, out parsedHeight))
+                        { climber.Height = parsedHeight; }
+                        else { climber.Height = 0; }               
+                    }
+                    HtmlNode nodeWeight = doc.DocumentNode.SelectSingleNode("//dt[@class='weight']");
+                    if(nodeWeight != null)
+                    {
+                        double parsedWeight = 0;
+                        if (double.TryParse(nodeWeight.InnerHtml, out parsedWeight))
+                        { climber.Weight = parsedWeight; }
+                        else { climber.Weight = 0; } 
+                    }
+                    HtmlNode nodeBday = doc.DocumentNode.SelectSingleNode("//dt[@class='birthdate']");
+                    if(nodeBday != null)
+                    {
+                        int parsedBday = 0;
+                        if (int.TryParse(nodeBday.InnerHtml, out parsedBday))
+                        { climber.BirthYear = parsedBday; }
+                        else { climber.BirthYear = 0; }
+                    }
+                    Console.WriteLine(climber.FirstName);
+                    Console.WriteLine(climber.LastName);
+                    Console.WriteLine(climber.Bmi);
+                    allClimbers.Add(climber);
+                }
+                catch //a node doesn't exist (a single nonexistant node shold stop processing it)
+                {
+                    Console.WriteLine("No Climber found");
+                }
             }
-            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//dt[@class='nation']"))
+            else
             {
-                //it could be assigned null or a string value
-                climber.Nationality = node.InnerHtml;
-            }
-            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//dt[@class='height']"))
-            {
-                //TODO - add error handling for this.
-                              
-                double parsedHeight = 0;
-                if (double.TryParse(node.InnerHtml, out parsedHeight))
-                { climber.Height = parsedHeight; }
-                else { climber.Height = 0; }               
-            }
-            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//dt[@class='weight']"))
-            {
-                double parsedWeight = 0;
-                if (double.TryParse(node.InnerHtml, out parsedWeight))
-                { climber.Weight = parsedWeight; }
-                else { climber.Weight = 0; } 
-            }
-            foreach (HtmlNode node in doc.DocumentNode.SelectNodes("//dt[@class='birthdate']"))
-            {
-                int parsedBday = 0;
-                if (int.TryParse(node.InnerHtml, out parsedBday))
-                { climber.BirthYear = parsedBday; }
-                else { climber.BirthYear = 0; }
-            }
-            // Console.WriteLine(climber.FirstName);
-            // Console.WriteLine(climber.LastName);
-            // Console.WriteLine(climber.Bmi);
-            allClimbers.Add(climber);
+                Console.WriteLine("No Athlete found");
+            }  
         }    
     }
 }
