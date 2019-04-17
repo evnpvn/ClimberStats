@@ -6,15 +6,35 @@ namespace ClimberStats
 {
     public class Climber
     {
-        public string FullName { get; set{ "";} }
+        public string FullName { get; set; }
         public string FirstName 
         { 
-          get { return FirstName = (FullName.Split(" ", 2)).FirstOrDefault(); }
+          get 
+          { 
+            if(FullName == null)
+            {
+              return FirstName = null;
+            }
+            else
+            {
+              return FirstName = (FullName.Split(" ", 2)).FirstOrDefault();
+            }
+          }
           private set { } 
         }
         public string LastName
         { 
-          get { return FirstName = (FullName.Split(" ", 2)).LastOrDefault(); }
+          get 
+          { 
+            if(FullName == null)
+            {
+              return FirstName = null;
+            }
+            else
+            {
+              return FirstName = (FullName.Split(" ", 2)).LastOrDefault();
+            }
+          }
           private set { } 
         }
         public string Nationality { get; set; }
