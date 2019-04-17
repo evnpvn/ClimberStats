@@ -11,13 +11,8 @@ namespace ClimberStats
     public class Program
     {
         public static void Main(string[] args)
-        {
-            //troubleshoot why it doesn't exist
-            //I'm currently running the method which is returning the list of climbers
-            //Then I'm trying to run a foreach on that list.
-
-            
-            PopulateClimberList();
+        {          
+            List<Climber> allClimbers = PopulateClimberList();
             foreach(Climber climber in allClimbers)
             {
                 Console.WriteLine(climber.FirstName);
@@ -28,10 +23,9 @@ namespace ClimberStats
         
         public static List<Climber> PopulateClimberList()
         {
-            List<Climber> allClimbers = new List<Climber>();
+            List<Climber> getAllClimbers = new List<Climber>();
 
             string baseUrl = "https://www.ifsc-climbing.org/index.php?option=com_ifsc&view=athlete&id=";
-            
             
             for( int id = 1; id < 10; id++) //Generate athlete Ids
             {
@@ -76,21 +70,23 @@ namespace ClimberStats
                             { climber.BirthYear = parsedBday; }
                             else { climber.BirthYear = 0; }
                         }
-                        allClimbers.Add(climber);
+                        getAllClimbers.Add(climber);
                         doc = null;
                         GC.Collect();
 
-                        return allClimbers;
                     }
                     catch//()//a node doesn't exist- a single missing node shold stop processing the current doc
                     {   //Need to add the exact exception thrown.
                         //now that I think about it an exception won't be thrown (nevermind maybe they're will be)
                         //retry this with a missing climber see what exception is thrown.
                         Console.WriteLine("No Climber found");
-                        //retry the loop - should do this automatically from the catch  
+                        //retry the loop - should do this automatically from the catch
+
                     }
                 }
-            }     
+            }
+            
+            return getAllClimbers;    
         }    
     }
 }

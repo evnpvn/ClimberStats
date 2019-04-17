@@ -6,7 +6,7 @@ namespace ClimberStats
 {
     public class Climber
     {
-        public string FullName { get; set; }
+        public string FullName { get; set{ "";} }
         public string FirstName 
         { 
           get { return FirstName = (FullName.Split(" ", 2)).FirstOrDefault(); }
